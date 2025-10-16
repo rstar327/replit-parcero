@@ -1,0 +1,495 @@
+import React, { useState } from "react";
+import { useLocation } from "wouter";
+import { useWeb3 } from "@/hooks/use-web3";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { 
+  Search, 
+  Menu, 
+  X, 
+  ArrowLeft,
+  Clock,
+  Shield,
+  CheckCircle,
+  AlertCircle,
+  Globe
+} from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
+import { useQuery } from "@tanstack/react-query";
+
+export default function RefundPolicy() {
+  const { isConnected, connectWallet, disconnectWallet, tokenInfo, isLoading: web3Loading } = useWeb3();
+  const [, setLocation] = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [language, setLanguage] = useState("en");
+
+  // Fetch user profile for avatar
+  const { data: profileData } = useQuery({
+    queryKey: ["/api/profile/user-1"],
+    enabled: true,
+  });
+
+  const handleLogout = () => {
+    setLocation('/');  
+    setMobileMenuOpen(false);
+  };
+
+  const handleBackToPricing = () => {
+    setLocation('/pricing');
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#f0fdff] to-[#e0f7fa]">
+      {/* Header */}
+      <header className="bg-white/90 backdrop-blur-sm border-b sticky top-0 z-40">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center space-x-8">
+            <img 
+              src="/src/assets/parcero-logo.png" 
+              alt="Parcero.eco" 
+              className="rounded object-contain cursor-pointer"
+              style={{ height: '42px', width: 'auto' }}
+              onClick={() => setLocation('/')}
+              data-testid="logo"
+            />
+            
+            {/* Search Bar and Navigation */}
+            <div className="hidden md:flex items-center">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search courses..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 w-64 h-9 bg-white dark:bg-background"
+                  data-testid="input-search-courses"
+                />
+              </div>
+              <Button 
+                variant="ghost" 
+                onClick={() => setLocation('/public-courses')}
+                className="hover:bg-[#CDEDF6] ml-3"
+                data-testid="nav-courses"
+              >
+                Courses
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={() => setLocation('/pricing')}
+                className="hover:bg-[#CDEDF6] ml-3"
+                data-testid="nav-pricing"
+              >
+                Pricing
+              </Button>
+            </div>
+          </div>
+          
+          <div className="flex items-center space-x-4">
+            {/* Web3 Integration */}
+            {isConnected ? (
+              <div className="flex items-center space-x-4">
+                <div className="text-sm">
+                  <div className="font-medium">
+                    {web3Loading ? "Loading..." : `${tokenInfo?.balance || "0"} PARCERO`}
+                  </div>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={disconnectWallet}
+                  data-testid="button-disconnect-wallet"
+                >
+                  Disconnect
+                </Button>
+              </div>
+            ) : (
+              <Button 
+                onClick={connectWallet}
+                className="bg-[#00BFA5] hover:bg-[#00BFA5]/90 text-white"
+                data-testid="button-connect-wallet"
+              >
+                Connect Wallet
+              </Button>
+            )}
+
+            {/* Language Switcher */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="hover:bg-[#CDEDF6]" data-testid="button-language-switcher">
+                  <Globe className="w-4 h-4 mr-2" />
+                  {language === "en" ? "EN" : "ES"}
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => setLanguage("en")} data-testid="language-english">
+                  English
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLanguage("es")} data-testid="language-spanish">
+                  Español
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full" data-testid="profile-dropdown">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={(profileData as any)?.avatar} alt={(profileData as any)?.username} />
+                    <AvatarFallback>{(profileData as any)?.username?.[0]?.toUpperCase() || "U"}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuItem onClick={() => setLocation('/dashboard')} data-testid="dropdown-dashboard">
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setLocation('/profile')} data-testid="dropdown-profile">
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} data-testid="dropdown-logout">
+                  Log out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                data-testid="mobile-menu-button"
+              >
+                {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              </Button>
+            </div>
+          </div>
+
+          {/* Mobile Navigation Menu */}
+          {mobileMenuOpen && (
+            <div className="md:hidden py-4 border-t">
+              <div className="flex flex-col space-y-2">
+                <Button 
+                  variant="ghost" 
+                  onClick={() => { setLocation('/public-courses'); setMobileMenuOpen(false); }}
+                  className="justify-start"
+                  data-testid="mobile-nav-courses"
+                >
+                  Courses
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  onClick={() => { setLocation('/pricing'); setMobileMenuOpen(false); }}
+                  className="justify-start"
+                  data-testid="mobile-nav-pricing"
+                >
+                  Pricing
+                </Button>
+                <div className="pt-2 border-t">
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => { setLocation('/dashboard'); setMobileMenuOpen(false); }}
+                    className="justify-start w-full"
+                    data-testid="mobile-nav-dashboard"
+                  >
+                    Dashboard
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    onClick={() => { handleLogout(); }}
+                    className="justify-start w-full"
+                    data-testid="mobile-nav-logout"
+                  >
+                    Log out
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </header>
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Refund & Return Policy</h1>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">We want you to be completely satisfied with your subscription so here's everything you need to know about our refund and return policy.</p>
+        </div>
+
+        {/* Policy Content */}
+        <div className="max-w-4xl mx-auto space-y-8">
+          {/* 30-Day Money Back Guarantee */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">30-Day Money-Back Guarantee</CardTitle>
+                  <CardDescription>Try our platform risk-free</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
+                We offer a full 30-day money-back guarantee for all new subscriptions. If you're not completely 
+                satisfied with your Parcero.eco experience, you can request a full refund within 30 days of your 
+                initial subscription date.
+              </p>
+              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg">
+                <p className="text-sm text-green-800 dark:text-green-200">
+                  <strong>What's included:</strong> Full access to all courses, community features, and token rewards 
+                  during your trial period. If you're not happy, get 100% of your money back.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Refund Process */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Clock className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">How to Request a Refund</CardTitle>
+                  <CardDescription>Simple 3-step process</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">
+                    1
+                  </div>
+                  <h3 className="font-semibold mb-2">Contact Support</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Reach out via WhatsApp, email, or our dashboard support system
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">
+                    2
+                  </div>
+                  <h3 className="font-semibold mb-2">Provide Details</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Share your subscription details and reason for refund request
+                  </p>
+                </div>
+                <div className="text-center">
+                  <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 font-bold">
+                    3
+                  </div>
+                  <h3 className="font-semibold mb-2">Get Refunded</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Receive your full refund within 5-7 business days
+                  </p>
+                </div>
+              </div>
+              
+              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+                <p className="text-sm text-blue-800 dark:text-blue-200">
+                  <strong>Contact Information:</strong><br/>
+                  • WhatsApp: +57 315 117 7633
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Subscription Cancellation */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-orange-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">Subscription Cancellation</CardTitle>
+                  <CardDescription>Cancel anytime, no questions asked</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
+                You can cancel your subscription at any time from your dashboard. When you cancel:
+              </p>
+              <ul className="space-y-2 text-muted-foreground">
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>You'll continue to have access until the end of your current billing period</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>No additional charges will be made</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>You can reactivate your subscription anytime</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                  <span>Your progress and tokens earned are preserved</span>
+                </li>
+              </ul>
+            </CardContent>
+          </Card>
+
+          {/* Special Cases */}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <AlertCircle className="w-6 h-6 text-yellow-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl">Important Notes</CardTitle>
+                  <CardDescription>Special circumstances and conditions</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">Token Rewards</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Any PARCERO tokens earned during your subscription period remain yours to keep, 
+                    even after cancellation or refund. These are stored on the blockchain and cannot be revoked.
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Course Progress</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Your learning progress and certificates earned are permanently saved to your account. 
+                    If you resubscribe later, you'll pick up exactly where you left off.
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Refund Processing Time</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Refunds are processed back to your original payment method. Credit card refunds typically 
+                    take 5-7 business days to appear, while other payment methods may vary.
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-semibold mb-2">Fair Use Policy</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Our refund policy is designed for genuine dissatisfaction. Abuse of the refund system 
+                    (such as repeatedly subscribing and requesting refunds) may result in account restrictions.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Contact Support */}
+          <Card className="border-2 border-primary/20">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl">Need Help?</CardTitle>
+              <CardDescription>
+                Our support team is here to help you with any questions about refunds or cancellations
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              <p className="text-muted-foreground">
+                Before requesting a refund, consider reaching out to our support team. 
+                We're often able to resolve issues and help you get the most out of your subscription.
+              </p>
+              
+              <div className="flex justify-center">
+                <Button 
+                  onClick={() => window.open('https://wa.me/573151177633', '_blank')}
+                  className="bg-[#25D366] hover:bg-[#20b456] text-white"
+                  data-testid="button-whatsapp-support"
+                >
+                  <FaWhatsapp className="w-4 h-4 mr-2" />
+                  WhatsApp Support
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+      {/* Footer */}
+      <footer className="py-12 text-[#cbecf6] bg-[#042125] mt-16">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <img 
+                  src="/src/assets/parcero-logo.png" 
+                  alt="Parcero.eco" 
+                  className="rounded object-contain"
+                  style={{ height: '42px', width: 'auto' }}
+                />
+              </div>
+              <p className="text-[#cbecf6]">Community-powered skills</p>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Courses</h3>
+              <ul className="space-y-2 text-[#cbecf6]">
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Finance</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Business</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Communication</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Marketing</Button></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Platform</h3>
+              <ul className="space-y-2 text-[#cbecf6]">
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">How It Works</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Token Rewards</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Community</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Support</Button></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h3 className="font-semibold mb-4">Blockchain</h3>
+              <ul className="space-y-2 text-[#cbecf6]">
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">PARCERO Token</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Polygon Network</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">PolygonScan</Button></li>
+                <li><Button variant="link" className="p-0 h-auto text-[#cbecf6] font-normal">Wallet Guide</Button></li>
+              </ul>
+            </div>
+          </div>
+          
+          <div className="border-t border-[#063137] mt-8 pt-8 text-center text-[#cbecf6]">
+            <p>&copy; 2024 Parcero.eco. All rights reserved. Powered by Polygon blockchain.</p>
+          </div>
+        </div>
+      </footer>
+      {/* WhatsApp Floating Widget */}
+      <a
+        href="https://wa.me/573151177633"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20b456] rounded-full shadow-lg transition-all duration-300 hover:scale-110"
+        data-testid="whatsapp-widget"
+      >
+        <FaWhatsapp className="w-7 h-7 text-white" />
+      </a>
+    </div>
+  );
+}

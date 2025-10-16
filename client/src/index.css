@@ -1,0 +1,164 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(189, 73%, 94%);
+  --foreground: hsl(183, 100%, 8%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(183, 100%, 8%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(183, 100%, 8%);
+  --primary: hsl(183, 62%, 45%);
+  --primary-foreground: hsl(0, 0%, 98%);
+  --secondary: hsl(189, 73%, 86%);
+  --secondary-foreground: hsl(183, 100%, 8%);
+  --muted: hsl(189, 73%, 86%);
+  --muted-foreground: hsl(183, 20%, 35%);
+  --accent: hsl(20, 90%, 60%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(10, 85%, 50%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --border: hsl(189, 40%, 85%);
+  --input: hsl(189, 40%, 85%);
+  --ring: hsl(183, 62%, 45%);
+  --chart-1: hsl(183, 62%, 45%);
+  --chart-2: hsl(20, 90%, 60%);
+  --chart-3: hsl(183, 100%, 8%);
+  --chart-4: hsl(189, 73%, 86%);
+  --chart-5: hsl(10, 85%, 50%);
+  --sidebar: hsl(180, 6.6667%, 97.0588%);
+  --sidebar-foreground: hsl(210, 25%, 7.8431%);
+  --sidebar-primary: hsl(203.8863, 88.2845%, 53.1373%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(211.5789, 51.3514%, 92.7451%);
+  --sidebar-accent-foreground: hsl(203.8863, 88.2845%, 53.1373%);
+  --sidebar-border: hsl(205.0000, 25.0000%, 90.5882%);
+  --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.5rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-sm: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-md: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 2px 4px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-lg: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 4px 6px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 8px 10px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
+}
+
+.dark {
+  --background: hsl(183, 100%, 8%);
+  --foreground: hsl(189, 73%, 94%);
+  --card: hsl(183, 80%, 12%);
+  --card-foreground: hsl(189, 73%, 94%);
+  --popover: hsl(183, 80%, 12%);
+  --popover-foreground: hsl(189, 73%, 94%);
+  --primary: hsl(183, 62%, 55%);
+  --primary-foreground: hsl(183, 100%, 8%);
+  --secondary: hsl(183, 40%, 20%);
+  --secondary-foreground: hsl(189, 73%, 94%);
+  --muted: hsl(183, 40%, 20%);
+  --muted-foreground: hsl(189, 30%, 70%);
+  --accent: hsl(20, 90%, 60%);
+  --accent-foreground: hsl(183, 100%, 8%);
+  --destructive: hsl(10, 85%, 50%);
+  --destructive-foreground: hsl(189, 73%, 94%);
+  --border: hsl(183, 40%, 25%);
+  --input: hsl(183, 40%, 25%);
+  --ring: hsl(183, 62%, 55%);
+  --sidebar: hsl(228, 9.8039%, 10%);
+  --sidebar-foreground: hsl(0, 0%, 85.0980%);
+  --sidebar-primary: hsl(202.8169, 89.1213%, 53.1373%);
+  --sidebar-primary-foreground: hsl(0, 0%, 100%);
+  --sidebar-accent: hsl(205.7143, 70%, 7.8431%);
+  --sidebar-accent-foreground: hsl(203.7736, 87.6033%, 52.5490%);
+  --sidebar-border: hsl(205.7143, 15.7895%, 26.0784%);
+  --sidebar-ring: hsl(202.8169, 89.1213%, 53.1373%);
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --font-serif: Georgia, serif;
+  --font-mono: Menlo, monospace;
+  --radius: 0.5rem;
+  --shadow-2xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-xs: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-sm: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 1px 2px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-md: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 2px 4px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-lg: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 4px 6px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0), 0px 8px 10px -1px hsl(202.8169, 89.1213%, 53.1373%, 0);
+  --shadow-2xl: 0px 2px 0px 0px hsl(202.8169, 89.1213%, 53.1373%, 0);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+  }
+}
+
+.chart-container {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
+/* Slow pulsing animation */
+@keyframes slow-ping {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.3;
+  }
+}
+
+.animate-slow-ping {
+  animation: slow-ping 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom Scrollbar Styles */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Dark mode scrollbar */
+.dark .scrollbar-thin {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
