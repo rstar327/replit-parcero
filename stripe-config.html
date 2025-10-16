@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Yearly Pricing IDs Configuration</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2F6A75;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .field-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: monospace;
+            background-color: #f9f9f9;
+            transition: border-color 0.2s;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #2F6A75;
+            background-color: white;
+        }
+        .helper-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+        .copy-btn {
+            background-color: #2F6A75;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .copy-btn:hover {
+            opacity: 0.9;
+        }
+        .output {
+            background-color: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Stripe Yearly Pricing IDs</h1>
+        
+        <div class="field-group">
+            <label for="apprentice">Apprentice Yearly Price ID:</label>
+            <input type="text" id="apprentice" placeholder="price_xxxxxxxxxx" oninput="updateCode()">
+            <div class="helper-text">Enter your Stripe yearly price ID for the Apprentice plan ($150/year)</div>
+        </div>
+
+        <div class="field-group">
+            <label for="expert">Expert Yearly Price ID:</label>
+            <input type="text" id="expert" placeholder="price_xxxxxxxxxx" oninput="updateCode()">
+            <div class="helper-text">Enter your Stripe yearly price ID for the Expert plan ($300/year)</div>
+        </div>
+
+        <div class="field-group">
+            <label for="guru">Guru Yearly Price ID:</label>
+            <input type="text" id="guru" placeholder="price_xxxxxxxxxx" oninput="updateCode()">
+            <div class="helper-text">Enter your Stripe yearly price ID for the Guru plan ($420/year)</div>
+        </div>
+
+        <button class="copy-btn" onclick="copyToClipboard()">📋 Copy Updated Code</button>
+
+        <div class="output" id="output">
+Fill in the price IDs above and click "Copy Updated Code" to get the code to paste into your pricing.tsx file.
+        </div>
+    </div>
+
+    <script>
+        function updateCode() {
+            const apprentice = document.getElementById('apprentice').value || 'PASTE_APPRENTICE_YEARLY_PRICE_ID_HERE';
+            const expert = document.getElementById('expert').value || 'PASTE_EXPERT_YEARLY_PRICE_ID_HERE';
+            const guru = document.getElementById('guru').value || 'PASTE_GURU_YEARLY_PRICE_ID_HERE';
+
+            const code = `// Replace these three lines in your pricing.tsx file:
+
+Line 152: yearlyPriceId: "${apprentice}", // Yearly Stripe price ID
+Line 174: yearlyPriceId: "${expert}", // Yearly Stripe price ID  
+Line 196: yearlyPriceId: "${guru}", // Yearly Stripe price ID
+
+// Or copy this complete replacement for the yearlyPriceId fields:
+
+yearlyPriceId: "${apprentice}", // Apprentice yearly
+yearlyPriceId: "${expert}", // Expert yearly  
+yearlyPriceId: "${guru}", // Guru yearly`;
+
+            document.getElementById('output').textContent = code;
+        }
+
+        function copyToClipboard() {
+            const output = document.getElementById('output');
+            navigator.clipboard.writeText(output.textContent).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    btn.textContent = '📋 Copy Updated Code';
+                }, 2000);
+            });
+        }
+
+        // Initialize
+        updateCode();
+    </script>
+</body>
+</html>
